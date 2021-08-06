@@ -28,11 +28,18 @@ spring:
                 preLogger: true
                 postLogger: true
 
+        - id: item-service
+          uri: lb://item-service
+          predicates:
+            - Path=/item-service/**
+          filters:
+            - name: CustomFilter
+            - name: LoggingFilter
+              args:
+                baseMessage: Custom Logging Filter
+                preLogger: true
+                postLogger: true
 
-      #        - id: user-service
-#          uri: http://localhost:9001/
-#          predicates:
-#            - Path=/user-service
       default-filters:
         - name: GlobalFilter
           args:

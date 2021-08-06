@@ -19,8 +19,15 @@ spring:
       format_sql: true
     defer-datasource-initialization: true
 
+  # multi file upload configure
+  servlet:
+    multipart:
+      location: C:\Users\MJLEE\Desktop\mjlee\git_workspace\NUDE\nude\nude\src\main\resources\static\item_img
+      max-file-size: 10MB
+      max-request-size: 50MB
+
   application:
-    name: user-service
+    name: item-service
 
 eureka:
   instance:
@@ -31,15 +38,6 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8101/eureka # regist to eureka server
 
-jwt:
-  header: Authorization
-  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
-  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-  token-validity-in-seconds: 86400 # 토큰 만료 시간
-
 logging:
   level:
     org.hibernate.SQL: debug
-
-greeting:
-  message: Welcome to the user service
