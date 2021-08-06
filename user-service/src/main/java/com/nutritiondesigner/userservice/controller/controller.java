@@ -1,4 +1,4 @@
-package com.nutritiondesigner.userservice;
+package com.nutritiondesigner.userservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController
+//@RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/user-service")
+//@RequestMapping("/user-service")
 public class controller {
 
     private final Environment env;
 
-    @GetMapping
+//    @GetMapping
     public String test() {
         return "Welcome to user service";
     }
 
-    @GetMapping("/filter-test")
+//    @GetMapping("/filter-test")
     public String gateWayFilterTest(@RequestHeader("user-request") String header) {
         return header;
     }
 
-    @GetMapping("/check")
+//    @GetMapping("/check")
     public String check(HttpServletRequest request) {
         log.info("Server port={}", request.getServerPort());
 
