@@ -18,7 +18,24 @@ spring:
           uri: http://localhost:9001/
           predicates:
             - Path=/user-service/**
-#        - id: user-service
+          filters:
+#            - AddRequestHeader=user-request, user-request-header2
+#            - AddResponseHeader=user-response, user-response-header2
+            - name: CustomFilter
+            - name: LoggingFilter
+              args:
+                baseMessage: Custom Logging Filter
+                preLogger: true
+                postLogger: true
+
+
+      #        - id: user-service
 #          uri: http://localhost:9001/
 #          predicates:
 #            - Path=/user-service
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
