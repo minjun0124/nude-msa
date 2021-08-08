@@ -43,3 +43,9 @@ logging:
 
 greeting:
   message: Welcome to the user service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
