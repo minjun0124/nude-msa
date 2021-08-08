@@ -14,31 +14,40 @@ spring:
   cloud:
     gateway:
       routes:
+#        - id: user-service
+#          uri: lb://user-service  # lb: load balancer
+#          predicates:
+#            - Path=/user-service/**
         - id: user-service
-          uri: lb://user-service  # lb: load balancer
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/auth
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://user-service
           predicates:
             - Path=/user-service/**
+            - Method=GET
           filters:
-#            - AddRequestHeader=user-request, user-request-header2
-#            - AddResponseHeader=user-response, user-response-header2
-            - name: CustomFilter
-            - name: LoggingFilter
-              args:
-                baseMessage: Custom Logging Filter
-                preLogger: true
-                postLogger: true
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
         - id: item-service
           uri: lb://item-service
           predicates:
             - Path=/item-service/**
-          filters:
-            - name: CustomFilter
-            - name: LoggingFilter
-              args:
-                baseMessage: Custom Logging Filter
-                preLogger: true
-                postLogger: true
 
       default-filters:
         - name: GlobalFilter
@@ -46,3 +55,18 @@ spring:
             baseMessage: Spring Cloud Gateway Global Filter
             preLogger: true
             postLogger: true
+
+#filters example
+#          filters:
+#            - AddRequestHeader=user-request, user-request-header2
+#            - AddResponseHeader=user-response, user-response-header2
+#            - name: CustomFilter
+#            - name: LoggingFilter
+#              args:
+#                baseMessage: Custom Logging Filter
+#                preLogger: true
+#                postLogger: true
+
+jwt:
+  header: Authorization
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
