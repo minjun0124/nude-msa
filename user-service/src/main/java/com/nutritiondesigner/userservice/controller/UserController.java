@@ -7,6 +7,7 @@ import com.nutritiondesigner.userservice.model.form.PwCheckForm;
 import com.nutritiondesigner.userservice.model.form.SignUpForm;
 import com.nutritiondesigner.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,10 +23,15 @@ public class UserController {
 
     private final UserService userService;
     private final Greeting greeting;
+    private final Environment env;
 
     @GetMapping("/health-check")
     public String status() {
-        return "It's Working in User Service";
+        return String.format("It's Working in User Service"
+                + ", port(local.server.port)=" + env.getProperty("local.server.port")
+                + ", port(server.port)=" + env.getProperty("server.port")
+                + ", token secret=" + env.getProperty("jwt.secret")
+                + ", token expiration time=" + env.getProperty("jwt.token-validity-in-seconds"));
     }
 
     @GetMapping("/welcome")
