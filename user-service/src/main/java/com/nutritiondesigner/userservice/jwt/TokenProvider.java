@@ -3,10 +3,12 @@ package com.nutritiondesigner.userservice.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,36 +30,26 @@ import java.util.stream.Collectors;
  * InitializingBean:afterPropertiesSet() - 빈이 생성되고 생성자 주입 이후 secret 값을 Base64 Decode해서 key변수 할당
  */
 @Component
-public class TokenProvider implements InitializingBean {
+@RequiredArgsConstructor
+public class TokenProvider {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    private final String secret;
-    private final long tokenValidityInMilliseconds;
-
+    private String secret;
+    private long tokenValidityInMilliseconds;
     private Key key;
 
-
-    // ${jwt.*} application.yml 에서 가져온다.
-    public TokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
-        this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-    }
+    private final Environment env;
 
     /**
      * Authentication 객체의 권한정보를 이용해서 토큰을 생성하는 createToken 메소드 추가
      */
     public String createToken(Authentication authentication) {
+
+        keyPropertiesSet();
+
         // Authentication 권한들
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -74,6 +66,13 @@ public class TokenProvider implements InitializingBean {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+    }
+
+    public void keyPropertiesSet() {
+        secret = env.getProperty("jwt.secret");
+        tokenValidityInMilliseconds = Long.parseLong(env.getProperty("jwt.token-validity-in-seconds")) * 1000;
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
