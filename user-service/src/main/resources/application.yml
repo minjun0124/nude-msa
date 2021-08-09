@@ -3,11 +3,11 @@ server:
 #  port: 9001
 
 spring:
-  datasource:
-    url: jdbc:mariadb://localhost:3306/nude_msa
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: min3248
+#  datasource:
+#    url: jdbc:mariadb://localhost:3306/nude_msa
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    username: root
+#    password: min3248
 
   jpa:
     open-in-view: false
