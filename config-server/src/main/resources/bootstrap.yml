@@ -1,2 +1,6 @@
 encrypt:
-  key: a1nkjljk1346jh36418yo93yy89afd889hp134adje
+#  key: a1nkjljk1346jh36418yo93yy89afd889hp134adje
+  key-store:
+    location: file:///${user.home}/Desktop/mjlee/git_workspace/nude-msa/keystore/apiEncryptionKey.jks
+    password: min3248
+    alias: apiEncryptionKey
