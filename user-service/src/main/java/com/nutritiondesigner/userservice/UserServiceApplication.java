@@ -1,5 +1,6 @@
 package com.nutritiondesigner.userservice;
 
+import com.nutritiondesigner.userservice.exception.FeignErrorDecoder;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,4 +29,5 @@ public class UserServiceApplication {
 	public Logger.Level feignLoggerLevel() {
 		return Logger.Level.FULL;
 	}
+
 }

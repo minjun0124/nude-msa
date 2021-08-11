@@ -70,14 +70,21 @@ public class UserService {
         /**
          * Using RestTemplate
          */
-//        String cartUrl = String.format(env.getProperty("order_service.url"), user.getId());
+//        String cartUrl = String.format(env.getProperty("cart_service.url"), user.getId());
 //        restTemplate.postForEntity(cartUrl, null, Object.class);
 
-        try {
-            cartServiceClient.createCart(user.getId());
-        } catch (FeignException.FeignClientException ex) {
-            log.error(ex.getMessage());
-        }
+        /**
+         * Using a feign client
+         * Feign exception handling
+         */
+//        try {
+//            cartServiceClient.createCart(user.getId());
+//        } catch (FeignException.FeignClientException ex) {
+//            log.error(ex.getMessage());
+//        }
+
+        /* ErrorDecoder */
+        cartServiceClient.createCart(user.getId());
 
         return user;
     }
