@@ -7,6 +7,7 @@ import com.nutritiondesigner.userservice.model.form.PwCheckForm;
 import com.nutritiondesigner.userservice.model.form.SignUpForm;
 import com.nutritiondesigner.userservice.repository.UserRepository;
 import com.nutritiondesigner.userservice.util.SecurityUtil;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -71,8 +72,12 @@ public class UserService {
          */
 //        String cartUrl = String.format(env.getProperty("order_service.url"), user.getId());
 //        restTemplate.postForEntity(cartUrl, null, Object.class);
-        
-        cartServiceClient.createCart(user.getId());
+
+        try {
+            cartServiceClient.createCart(user.getId());
+        } catch (FeignException.FeignClientException ex) {
+            log.error(ex.getMessage());
+        }
 
         return user;
     }
