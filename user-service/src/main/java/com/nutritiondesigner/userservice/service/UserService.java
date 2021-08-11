@@ -1,5 +1,6 @@
 package com.nutritiondesigner.userservice.service;
 
+import com.nutritiondesigner.userservice.client.CartServiceClient;
 import com.nutritiondesigner.userservice.model.domain.Authority;
 import com.nutritiondesigner.userservice.model.domain.User;
 import com.nutritiondesigner.userservice.model.form.PwCheckForm;
@@ -8,9 +9,11 @@ import com.nutritiondesigner.userservice.repository.UserRepository;
 import com.nutritiondesigner.userservice.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -21,12 +24,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-
-    /**
-     * TODO: MSA Kafka
-     */
-//    private final CartRepository cartRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final Environment env;
+//    private final RestTemplate restTemplate;
+
+    private final CartServiceClient cartServiceClient;
 
     /**
      * 회원가입을 수행하는 메소드
@@ -60,12 +62,17 @@ public class UserService {
         // 유저, 권한 정보를 저장
         userRepository.save(user);
 
-        /**
-         * TODO: MSA Kafka
-         */
         // cart 저장
 //        Cart cart = new Cart(user, 0);
 //        cartRepository.save(cart);
+
+        /**
+         * Using RestTemplate
+         */
+//        String cartUrl = String.format(env.getProperty("order_service.url"), user.getId());
+//        restTemplate.postForEntity(cartUrl, null, Object.class);
+        
+        cartServiceClient.createCart(user.getId());
 
         return user;
     }

@@ -30,6 +30,11 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
+    @Transactional
+    public void createCart(Cart cart) {
+        cartRepository.save(cart);
+    }
+
     /**
      * @Transactional 필요.
      * 메소드를 수행하는 동안 Transaction을 유지해야
@@ -92,4 +97,5 @@ public class CartService {
         cartItemRepository.deleteAllByCartCodeAndItemCodes(deleteCartDto.getCartCode(), deleteCartDto.getItemCodes());
 
     }
+
 }

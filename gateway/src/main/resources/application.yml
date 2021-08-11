@@ -19,10 +19,6 @@ spring:
   cloud:
     gateway:
       routes:
-#        - id: user-service
-#          uri: lb://user-service  # lb: load balancer
-#          predicates:
-#            - Path=/user-service/**
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -61,6 +57,16 @@ spring:
           uri: lb://item-service
           predicates:
             - Path=/item-service/**
+          filters:
+            - RewritePath=/item-service/(?<segment>.*), /$\{segment}
+
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart-service/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
 
       default-filters:
         - name: GlobalFilter

@@ -1,5 +1,6 @@
 package com.nutrtiondesigner.cartservice.controller;
 
+import com.nutrtiondesigner.cartservice.model.domain.Cart;
 import com.nutrtiondesigner.cartservice.model.dto.CartListDto;
 import com.nutrtiondesigner.cartservice.model.dto.DeleteCartDto;
 import com.nutrtiondesigner.cartservice.model.dto.ItemInsertDto;
@@ -8,7 +9,6 @@ import com.nutrtiondesigner.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +18,15 @@ public class CartController {
 
     private final CartService cartService;
 
+    @PostMapping("/{userId}")
+    public void createCart(@PathVariable("userId") Long userId){
+        Cart cart = new Cart(userId, 0);
+        cartService.createCart(cart);
+
+        return;
+    }
+
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity insertCart(@RequestBody ItemInsertDto itemInsertDto, Long userId){
         cartService.insertCart(itemInsertDto, userId);
 
@@ -27,7 +34,6 @@ public class CartController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity cartsList(Long userId){
         CartListDto cartList = cartService.getUserCart(userId);
 
@@ -35,7 +41,6 @@ public class CartController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity updateCartItem(@RequestBody UpdateCartDto updateCartDto){
         cartService.updateCartItem(updateCartDto);
 
@@ -43,7 +48,6 @@ public class CartController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity deleteCartItem(@RequestBody DeleteCartDto deleteCartDto){
         cartService.deleteCartItem(deleteCartDto);
 

@@ -45,6 +45,8 @@ eureka:
 logging:
   level:
     org.hibernate.SQL: debug
+    com.nutritiondesigner.userservice.client: DEBUG
+
 
 greeting:
   message: Welcome to the user service
