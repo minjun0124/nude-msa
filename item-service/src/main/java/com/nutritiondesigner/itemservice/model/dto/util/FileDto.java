@@ -16,9 +16,9 @@ public class FileDto {
     private String path;
 
     public FileDto(String fileName, String contentType) {
-        uuid = UUID.randomUUID().toString();
-        fileName = fileName;
-        contentType = contentType;
-        path = uuid + "_" + fileName;
+        this.uuid = UUID.randomUUID().toString();
+        this.fileName = fileName;
+        this.contentType = contentType;
+        this.path = uuid + "_" + fileName;
     }
 }

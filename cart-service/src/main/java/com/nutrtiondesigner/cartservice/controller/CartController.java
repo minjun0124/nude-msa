@@ -18,7 +18,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/{userId}")
+    @PostMapping("/create/{userId}")
     public void createCart(@PathVariable("userId") Long userId){
         Cart cart = new Cart(userId, 0);
         cartService.createCart(cart);
@@ -26,15 +26,15 @@ public class CartController {
         return;
     }
 
-    @PostMapping
-    public ResponseEntity insertCart(@RequestBody ItemInsertDto itemInsertDto, Long userId){
+    @PostMapping("/{userId}")
+    public ResponseEntity insertCart(@RequestBody ItemInsertDto itemInsertDto, @PathVariable("userId") Long userId){
         cartService.insertCart(itemInsertDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity cartsList(Long userId){
+    @GetMapping("/{userId}")
+    public ResponseEntity cartsList(@PathVariable("userId") Long userId){
         CartListDto cartList = cartService.getUserCart(userId);
 
         return new ResponseEntity<>(cartList, HttpStatus.OK);

@@ -20,7 +20,7 @@ spring:
     gateway:
       routes:
 
-#   user-service /auth post
+#   user-service /auth POST
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -30,7 +30,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
-#   user-service /users post
+#   user-service /users POST
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -70,16 +70,16 @@ spring:
           filters:
             - RewritePath=/item-service/(?<segment>.*), /$\{segment}
 
-#   cart-service post, get
+#   cart-service POST, GET, PUT, DELETE
         - id: cart-service
           uri: lb://cart-service
           predicates:
             - Path=/cart-service/**
-            - Method=POST,GET
+            - Method=POST,GET,PUT,DELETE
           filters:
             - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
 
-#   order-service post, get, put, delete
+#   order-service POST, GET, PUT, DELETE
         - id: order-service
           uri: lb://order-service
           predicates:

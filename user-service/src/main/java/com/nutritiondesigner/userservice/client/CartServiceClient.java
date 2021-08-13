@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "cart-service")
 public interface CartServiceClient {
 
-    @PostMapping("/carts/{userId}")
+    @PostMapping("/carts/create/{userId}")
     void createCart(@PathVariable("userId") Long userId);
 }

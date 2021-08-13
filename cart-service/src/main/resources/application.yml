@@ -7,7 +7,7 @@ spring:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       format_sql: true
     defer-datasource-initialization: true
