@@ -19,6 +19,8 @@ spring:
   cloud:
     gateway:
       routes:
+
+#   user-service /auth post
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -27,6 +29,8 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+#   user-service /users post
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -35,36 +39,52 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+#   user-service POST, GET, PUT, DELETE method (AuthorizationHeaderFilter)
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user-service/**
-            - Method=GET
+            - Method=POST,GET,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
+#   user-service actuator
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user-service/actuator/**
-            - Method=GET,POST
+            - Method=POST,GET
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
+#   item-service POST,GET,PUT
         - id: item-service
           uri: lb://item-service
           predicates:
             - Path=/item-service/**
+            - Method=POST,GET,PUT
           filters:
             - RewritePath=/item-service/(?<segment>.*), /$\{segment}
 
+#   cart-service post, get
         - id: cart-service
           uri: lb://cart-service
           predicates:
             - Path=/cart-service/**
-            - Method=GET,POST
+            - Method=POST,GET
+          filters:
+            - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+
+#   order-service post, get, put, delete
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/**
+            - Method=POST,GET,PUT,DELETE
           filters:
             - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
 

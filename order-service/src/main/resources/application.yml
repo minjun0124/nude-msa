@@ -12,7 +12,7 @@ spring:
     defer-datasource-initialization: true
 
   application:
-    name: user-service
+    name: order-service
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -35,7 +35,7 @@ logging:
 
 
 greeting:
-  message: Welcome to the user service
+  message: Welcome to the order service
 
 management:
   endpoints:
