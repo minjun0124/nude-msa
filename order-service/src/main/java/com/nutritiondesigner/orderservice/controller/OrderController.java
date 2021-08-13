@@ -8,7 +8,6 @@ import com.nutritiondesigner.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,36 +19,31 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity insertOrder(@RequestBody OrderInsertDto orderInsertDto, Long userId) {
+    @PostMapping("/{userId}")
+    public ResponseEntity insertOrder(@RequestBody OrderInsertDto orderInsertDto, @PathVariable("userId") Long userId) {
         orderService.insertOrder(orderInsertDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity updateOrderStatus(@RequestBody OrderStatusDto orderStatusDto) {
         orderService.updateOrderStatus(orderStatusDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity orderList(Long userId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity orderList(@PathVariable("userId") Long userId) {
         List<OrderListDto> orderList = orderService.getOrderList(userId);
 
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }
 
-    @GetMapping("/{ordercode}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity orderDetail(@PathVariable Long ordercode, Long userId) {
-        OrderDetailDto orderDetail = orderService.getOrderDetail(ordercode, userId);
+    @GetMapping("/{userId}/{ordercode}")
+    public ResponseEntity orderDetail(@PathVariable("userId") Long userId, @PathVariable Long ordercode) {
+        OrderDetailDto orderDetail = orderService.getOrderDetail(userId, ordercode);
 
         return new ResponseEntity<>(orderDetail, HttpStatus.OK);
     }
-
 }

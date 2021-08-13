@@ -86,7 +86,7 @@ spring:
             - Path=/order-service/**
             - Method=POST,GET,PUT,DELETE
           filters:
-            - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
 
       default-filters:
         - name: GlobalFilter

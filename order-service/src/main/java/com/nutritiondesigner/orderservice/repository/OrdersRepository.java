@@ -14,5 +14,5 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 //    , countQuery = "select count(o) from Orders o where o.user.id = :userId")
     Page<Orders> findByUserId(@Param("userId") Long userId, Pageable Pageable);
 
-    Optional<Orders> findByCodeAndUserId(Long code, Long userId);
+    Optional<Orders> findByUserIdAndCode(Long userId, Long code);
 }

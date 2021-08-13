@@ -22,7 +22,7 @@ public class Orders extends BaseTimeEntity {
     private OrderStatus status = OrderStatus.PENDING;
     private int price;
 
-    @Column(name = "user_id", unique = true)
+    @Column(name = "user_id")
     private Long userId;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)

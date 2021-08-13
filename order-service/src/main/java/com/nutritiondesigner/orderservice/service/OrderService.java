@@ -49,6 +49,9 @@ public class OrderService {
             OrderItem orderItem = new OrderItem(orders, item, order.getQuantity());
             orderItemRepository.save(orderItem);
         }
+        /**
+         * TODO: 장바구니 비우기
+         */
     }
 
     public List<OrderListDto> getOrderList(Long userId) {
@@ -60,8 +63,8 @@ public class OrderService {
         return ordersDtoList.getContent();
     }
 
-    public OrderDetailDto getOrderDetail(Long ordercode, Long userId) {
-        Orders orders = ordersRepository.findByCodeAndUserId(ordercode, userId).orElse(null);
+    public OrderDetailDto getOrderDetail(Long userId, Long ordercode) {
+        Orders orders = ordersRepository.findByUserIdAndCode(userId, ordercode).orElse(null);
         PageRequest pageRequest = PageRequest.of(0, 4);
         Page<OrderItem> orderItems = orderItemRepository.findFetchJoinByOrderCode(ordercode, pageRequest);
 
