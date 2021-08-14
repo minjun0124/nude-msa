@@ -1,6 +1,6 @@
 package com.nutritiondesigner.itemservice.controller;
 
-import com.nutritiondesigner.itemservice.model.dto.item.ItemDto;
+import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
 import com.nutritiondesigner.itemservice.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,16 +45,23 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ItemResponse>> getItemList(@RequestParam("itemCodes") List<Long> itemCodes){
+        List<ItemResponse> itemList = itemService.getByCodeList(itemCodes);
+
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
+    }
+
     @GetMapping("/{category}")
     public ResponseEntity categoryItem(@PathVariable("category") String category) {
-        Page<ItemDto> itemDtoPage = itemService.getCategoryItems(category);
+        Page<ItemResponse> itemDtoPage = itemService.getCategoryItems(category);
 
         return new ResponseEntity<>(itemDtoPage.getContent(), HttpStatus.OK);
     }
 
     @GetMapping("/new")
     public ResponseEntity newItem() {
-        Page<ItemDto> itemDtoPage = itemService.getNewItems();
+        Page<ItemResponse> itemDtoPage = itemService.getNewItems();
 
         return new ResponseEntity<>(itemDtoPage.getContent(), HttpStatus.OK);
     }
@@ -64,7 +73,7 @@ public class ItemController {
      */
     @GetMapping("/best")
     public ResponseEntity bestItem() {
-        Page<ItemDto> itemDtoPage = itemService.getBestItems();
+        Page<ItemResponse> itemDtoPage = itemService.getBestItems();
 
         return new ResponseEntity<>(itemDtoPage.getContent(), HttpStatus.OK);
     }

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ItemDto {
+public class ItemResponse {
     private Long code;
     private String img;
     private String category;
@@ -29,7 +29,7 @@ public class ItemDto {
     private double vegetable = 0;
     private int quantity = 0;
 
-    public ItemDto(Item item) {
+    public ItemResponse(Item item) {
         code = item.getCode();
         img = item.getImgPath();
         name = item.getName();
@@ -42,7 +42,7 @@ public class ItemDto {
         fat = item.getFat();
         vegetable = item.getVegetable();
     }
-    public ItemDto(Item item, int quantity) {
+    public ItemResponse(Item item, int quantity) {
         code = item.getCode();
         img = item.getImgPath();
         name = item.getName();
@@ -56,7 +56,7 @@ public class ItemDto {
         vegetable = item.getVegetable();
         this.quantity = quantity;
     }
-    public ItemDto(Item item, String categoryName) {
+    public ItemResponse(Item item, String categoryName) {
         code = item.getCode();
         category = categoryName;
         img = item.getImgPath();

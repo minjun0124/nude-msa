@@ -14,19 +14,18 @@ public class CartItem {
     @GeneratedValue
     private Long code;
 
+    @Column(name = "item_code")
+    private Long itemCode;
+
     @ManyToOne
     @JoinColumn(name = "cart_code")
     private Cart cart;
 
-    @ManyToOne
-    @JoinColumn(name = "item_code")
-    private Item item;
-
     private int quantity;
 
-    public CartItem(Cart cart, Item item, int quantity) {
+    public CartItem(Cart cart, Long itemCode, int quantity) {
         this.cart = cart;
-        this.item = item;
+        this.itemCode = itemCode;
         this.quantity = quantity;
     }
 

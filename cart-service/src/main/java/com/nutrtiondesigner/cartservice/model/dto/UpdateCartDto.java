@@ -6,5 +6,6 @@ import lombok.Data;
 public class UpdateCartDto {
     private Long cartCode;
     private Long itemCode;
+    private int price;
     private int quantity;
 }

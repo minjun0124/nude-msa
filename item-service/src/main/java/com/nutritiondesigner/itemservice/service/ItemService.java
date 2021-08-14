@@ -3,7 +3,7 @@ package com.nutritiondesigner.itemservice.service;
 import com.nutritiondesigner.itemservice.model.domain.Category;
 import com.nutritiondesigner.itemservice.model.domain.CategoryItem;
 import com.nutritiondesigner.itemservice.model.domain.Item;
-import com.nutritiondesigner.itemservice.model.dto.item.ItemDto;
+import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
 import com.nutritiondesigner.itemservice.repository.CategoryItemRepository;
 import com.nutritiondesigner.itemservice.repository.CategoryRepository;
@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -59,33 +61,41 @@ public class ItemService {
         categoryItemRepository.save(categoryItem);
     }
 
-    public Page<ItemDto> getCategoryItems(String categoryName) {
+    public Page<ItemResponse> getCategoryItems(String categoryName) {
         Category category = categoryRepository.findByName(categoryName);
 
         PageRequest pageRequest = PageRequest.of(0, 15/*, Sort.by(Sort.Direction.DESC, "item_code")*/);
         Page<CategoryItem> categoryItems = itemRepository.findByCategory(category.getCode(), pageRequest);
-        Page<ItemDto> itemDtoPage = categoryItems.map(c -> new ItemDto(c.getItem(), categoryName));
+        Page<ItemResponse> itemDtoPage = categoryItems.map(c -> new ItemResponse(c.getItem(), categoryName));
 
         return itemDtoPage;
     }
 
-    public Page<ItemDto> getBestItems() {
+    public Page<ItemResponse> getBestItems() {
         PageRequest pageRequest = PageRequest.of(0, 15, Sort.by(Sort.Direction.DESC, "rating"));
         Page<Item> bestItems = itemRepository.findAll(pageRequest);
-        Page<ItemDto> itemDtoPage = bestItems.map(i -> new ItemDto(i));
+        Page<ItemResponse> itemDtoPage = bestItems.map(i -> new ItemResponse(i));
 
         return itemDtoPage;
     }
 
-    public Page<ItemDto> getNewItems() {
+    public Page<ItemResponse> getNewItems() {
         PageRequest pageRequest = PageRequest.of(0, 15, Sort.by(Sort.Direction.DESC, "createdDate"));
         Page<Item> newItems = itemRepository.findAllByCreatedDateBetween(LocalDateTime.now().minusDays(7), LocalDateTime.now(), pageRequest);
-        Page<ItemDto> itemDtoPage = newItems.map(i -> new ItemDto(i));
+        Page<ItemResponse> itemDtoPage = newItems.map(i -> new ItemResponse(i));
 
         return itemDtoPage;
     }
 
     public Item getByCode(Long code) {
         return itemRepository.findById(code).orElse(null);
+    }
+
+    public List<ItemResponse> getByCodeList(List<Long> itemCodes) {
+        List<Item> itemList = itemRepository.findAllById(itemCodes);
+        List<ItemResponse> itemResponses
+                = itemList.stream().map(i -> new ItemResponse(i)).collect(Collectors.toList());
+
+        return itemResponses;
     }
 }

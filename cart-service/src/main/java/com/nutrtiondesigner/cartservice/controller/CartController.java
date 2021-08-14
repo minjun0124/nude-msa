@@ -3,7 +3,7 @@ package com.nutrtiondesigner.cartservice.controller;
 import com.nutrtiondesigner.cartservice.model.domain.Cart;
 import com.nutrtiondesigner.cartservice.model.dto.CartListDto;
 import com.nutrtiondesigner.cartservice.model.dto.DeleteCartDto;
-import com.nutrtiondesigner.cartservice.model.dto.ItemInsertDto;
+import com.nutrtiondesigner.cartservice.model.dto.ItemRequest;
 import com.nutrtiondesigner.cartservice.model.dto.UpdateCartDto;
 import com.nutrtiondesigner.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class CartController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity insertCart(@RequestBody ItemInsertDto itemInsertDto, @PathVariable("userId") Long userId){
-        cartService.insertCart(itemInsertDto, userId);
+    public ResponseEntity insertCart(@RequestBody ItemRequest itemRequest, @PathVariable("userId") Long userId){
+        cartService.insertCart(itemRequest, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package com.nutrtiondesigner.cartservice.util;
 
-import com.nutrtiondesigner.cartservice.model.dto.ItemDto;
+import com.nutrtiondesigner.cartservice.model.dto.ItemResponse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,7 @@ public class SumNutrition {
     private double fat = 0;
     private double vegetable = 0;
 
-    public void sum(ItemDto cartItem) {
+    public void sum(ItemResponse cartItem) {
         int quantity = cartItem.getQuantity();
         calories += cartItem.getCalories() * quantity;
         carbohydrate += cartItem.getCarbohydrate() * quantity;

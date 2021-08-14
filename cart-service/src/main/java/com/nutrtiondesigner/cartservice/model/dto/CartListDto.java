@@ -14,16 +14,16 @@ import java.util.List;
 @NoArgsConstructor
 public class CartListDto {
     private Long cartCode;
-    private List<ItemDto> cartItemList;
+    private List<ItemResponse> cartItemList;
     private SumNutrition sumNutrition;
     private int price;
 
-    public CartListDto(Long code, List<ItemDto> itemList, int changePrice) {
+    public CartListDto(Long code, List<ItemResponse> itemList, int changePrice) {
         cartCode = code;
         cartItemList = itemList;
         price = changePrice;
         sumNutrition = new SumNutrition();
-        for (ItemDto cartItem : itemList) {
+        for (ItemResponse cartItem : itemList) {
             sumNutrition.sum(cartItem);
         }
     }
