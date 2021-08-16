@@ -51,4 +51,8 @@ public class Item extends BaseEntity {
         fat = item.getFat();
         vegetable = item.getVegetable();
     }
+
+    public void decreaseStock(int quantity) {
+        this.stock -= quantity;
+    }
 }

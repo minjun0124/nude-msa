@@ -93,8 +93,8 @@ public class ItemController {
     /**
      * feign-client : order-service
      */
-    @PostMapping("/items/insert-order")
-    ResponseEntity insertOrder(@RequestParam("itemCodes") List<ItemRequest> itemRequestList){
+    @PostMapping("/insert-order")
+    ResponseEntity insertOrder(@RequestBody List<ItemRequest> itemRequestList){
         itemService.insertOrder(itemRequestList);
 
         return new ResponseEntity<>(HttpStatus.OK);
