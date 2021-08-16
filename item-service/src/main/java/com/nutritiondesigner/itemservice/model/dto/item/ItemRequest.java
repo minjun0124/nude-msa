@@ -1,4 +1,4 @@
-package com.nutritiondesigner.orderservice.model.dto.item;
+package com.nutritiondesigner.itemservice.model.dto.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemInsertDto {
+public class ItemRequest {
     private Long itemCode;
+    private int price;
     private int quantity;
 }

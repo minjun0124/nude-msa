@@ -68,6 +68,9 @@ public class CartService {
         log.info(itemCodes.get(0).toString());
         List<ItemResponse> itemList = itemServiceClient.getItemList(itemCodes);
 
+        /**
+         * TODO: quantity
+         */
         CartListDto cartList = new CartListDto(cart.getCode(), itemList, cart.getPrice());
 
         return cartList;

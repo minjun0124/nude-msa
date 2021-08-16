@@ -1,7 +1,7 @@
 package com.nutritiondesigner.orderservice.model.dto.order;
 
 import com.nutritiondesigner.orderservice.model.domain.Orders;
-import com.nutritiondesigner.orderservice.model.dto.item.ItemDto;
+import com.nutritiondesigner.orderservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.orderservice.model.enumeration.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,15 +17,15 @@ import java.util.List;
 public class OrderDetailDto {
     private Long orderCode;
     private LocalDateTime orderDate;
-    private List<ItemDto> itemList;
+    private List<ItemResponse> itemList;
     private int price;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    public OrderDetailDto(Orders orders, Page<ItemDto> itemList) {
+    public OrderDetailDto(Orders orders, List<ItemResponse> itemList) {
         orderCode = orders.getCode();
         orderDate = orders.getCreatedDate();
-        this.itemList = itemList.getContent();
+        this.itemList = itemList;
         price= orders.getPrice();
         orderStatus= orders.getStatus();
     }

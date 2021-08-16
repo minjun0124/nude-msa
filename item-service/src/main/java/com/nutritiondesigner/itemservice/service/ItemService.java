@@ -1,8 +1,10 @@
 package com.nutritiondesigner.itemservice.service;
 
+import com.nutritiondesigner.itemservice.exception.StockShortageException;
 import com.nutritiondesigner.itemservice.model.domain.Category;
 import com.nutritiondesigner.itemservice.model.domain.CategoryItem;
 import com.nutritiondesigner.itemservice.model.domain.Item;
+import com.nutritiondesigner.itemservice.model.dto.item.ItemRequest;
 import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
 import com.nutritiondesigner.itemservice.repository.CategoryItemRepository;
@@ -97,5 +99,14 @@ public class ItemService {
                 = itemList.stream().map(i -> new ItemResponse(i)).collect(Collectors.toList());
 
         return itemResponses;
+    }
+
+    public void insertOrder(List<ItemRequest> itemRequestList) {
+        for (ItemRequest request : itemRequestList) {
+            Item item = itemRepository.findById(request.getItemCode()).orElse(null);
+            if (item.getStock() < request.getQuantity()) {
+                throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
+            }
+        }
     }
 }

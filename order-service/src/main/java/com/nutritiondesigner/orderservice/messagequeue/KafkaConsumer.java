@@ -3,7 +3,6 @@ package com.nutritiondesigner.orderservice.messagequeue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nutritiondesigner.orderservice.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,7 +15,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaConsumer {
-    private final ItemRepository itemRepository;
 
     @KafkaListener(topics = "item-update-topic")
     public void updateItem(String kafkaMessage) {

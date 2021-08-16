@@ -1,5 +1,6 @@
 package com.nutritiondesigner.itemservice.controller;
 
+import com.nutritiondesigner.itemservice.model.dto.item.ItemRequest;
 import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
 import com.nutritiondesigner.itemservice.service.ItemService;
@@ -87,4 +88,16 @@ public class ItemController {
 //
 //        return new ResponseEntity<>(itemDtoPage.getContent(), HttpStatus.OK);
 //    }
+
+
+    /**
+     * feign-client : order-service
+     */
+    @PostMapping("/items/insert-order")
+    ResponseEntity insertOrder(@RequestParam("itemCodes") List<ItemRequest> itemRequestList){
+        itemService.insertOrder(itemRequestList);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

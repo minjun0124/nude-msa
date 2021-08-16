@@ -1,16 +1,14 @@
 package com.nutritiondesigner.orderservice.service;
 
-import com.nutritiondesigner.orderservice.exception.StockShortageException;
-import com.nutritiondesigner.orderservice.model.domain.Item;
+import com.nutritiondesigner.orderservice.client.ItemServiceClient;
 import com.nutritiondesigner.orderservice.model.domain.OrderItem;
 import com.nutritiondesigner.orderservice.model.domain.Orders;
-import com.nutritiondesigner.orderservice.model.dto.item.ItemDto;
-import com.nutritiondesigner.orderservice.model.dto.item.ItemInsertDto;
+import com.nutritiondesigner.orderservice.model.dto.item.ItemResponse;
+import com.nutritiondesigner.orderservice.model.dto.item.ItemRequest;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderDetailDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderInsertDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderListDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderStatusDto;
-import com.nutritiondesigner.orderservice.repository.ItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrderItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +27,8 @@ public class OrderService {
 
     private final OrdersRepository ordersRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ItemRepository itemRepository;
+    private final ItemServiceClient itemServiceClient;
+//    private final ItemRepository itemRepository;
 
     @Transactional
     public void insertOrder(OrderInsertDto orderInsertDto, Long userId) {
@@ -39,16 +39,13 @@ public class OrderService {
          * TODO: 아래와 같이 코드를 짜면 쿼리가 여러번 수행됨.
          * 어떻게 개선할 수 있을까? 조회쿼리 때문에 벌크성 쿼리도 수행할 수 없다.
          */
-        List<ItemInsertDto> codeList = orderInsertDto.getCodeList();
-        for (ItemInsertDto order : codeList) {
-            Item item = itemRepository.findById(order.getItemCode()).orElse(null);
-            if (item.getStock() < order.getQuantity()) {
-                throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
-            }
-
-            OrderItem orderItem = new OrderItem(orders, item, order.getQuantity());
-            orderItemRepository.save(orderItem);
+        List<ItemRequest> codeList = orderInsertDto.getCodeList();
+        itemServiceClient.insertOrder(codeList);
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (ItemRequest order : codeList) {
+            orderItems.add(new OrderItem(orders, order.getItemCode(), order.getQuantity()));
         }
+        orderItemRepository.saveAll(orderItems);
         /**
          * TODO: 장바구니 비우기
          */
@@ -64,13 +61,11 @@ public class OrderService {
     }
 
     public OrderDetailDto getOrderDetail(Long userId, Long ordercode) {
-        Orders orders = ordersRepository.findByUserIdAndCode(userId, ordercode).orElse(null);
-        PageRequest pageRequest = PageRequest.of(0, 4);
-        Page<OrderItem> orderItems = orderItemRepository.findFetchJoinByOrderCode(ordercode, pageRequest);
+        Orders order = ordersRepository.findByUserIdAndCode(userId, ordercode).orElse(null);
+        List<Long> itemCodes = orderItemRepository.findAllItemCodeByOrderCode(order.getCode());
+        List<ItemResponse> itemList = itemServiceClient.getItemList(itemCodes);
 
-        Page<ItemDto> itemList = orderItems.map(o -> new ItemDto(o.getItem(), o.getQuantity()));
-
-        OrderDetailDto orderDetailDto = new OrderDetailDto(orders, itemList);
+        OrderDetailDto orderDetailDto = new OrderDetailDto(order, itemList);
 
         return orderDetailDto;
     }

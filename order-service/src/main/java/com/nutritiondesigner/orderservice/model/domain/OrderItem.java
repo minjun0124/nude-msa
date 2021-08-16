@@ -18,15 +18,14 @@ public class OrderItem {
     @JoinColumn(name = "order_code")
     private Orders orders;
 
-    @ManyToOne
-    @JoinColumn(name = "item_code")
-    private Item item;
+    @Column(name = "item_code")
+    private Long itemCode;
 
     private int quantity;
 
-    public OrderItem(Orders orders, Item item, int quantity) {
+    public OrderItem(Orders orders, Long itemCode, int quantity) {
         this.orders = orders;
-        this.item = item;
+        this.itemCode = itemCode;
         this.quantity = quantity;
     }
 }
