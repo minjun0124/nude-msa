@@ -8,10 +8,13 @@ import com.nutrtiondesigner.cartservice.repository.CartItemRepository;
 import com.nutrtiondesigner.cartservice.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +31,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ItemServiceClient itemServiceClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Transactional
     public void createCart(Cart cart) {
@@ -65,8 +69,9 @@ public class CartService {
         Cart cart = cartRepository.findByUserId(userId).get();
 
         List<Long> itemCodes = cartItemRepository.findAllItemCodeByCartCode(cart.getCode());
-        log.info(itemCodes.get(0).toString());
-        List<ItemResponse> itemList = itemServiceClient.getItemList(itemCodes);
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreakder");
+        List<ItemResponse> itemList = circuitbreaker.run(() -> itemServiceClient.getItemList(itemCodes),
+                throwable -> new ArrayList<>());
 
         /**
          * TODO: quantity
