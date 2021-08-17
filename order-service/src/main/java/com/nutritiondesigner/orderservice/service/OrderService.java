@@ -12,6 +12,8 @@ import com.nutritiondesigner.orderservice.model.dto.order.OrderStatusDto;
 import com.nutritiondesigner.orderservice.repository.OrderItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ItemServiceClient itemServiceClient;
 //    private final ItemRepository itemRepository;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Transactional
     public void insertOrder(OrderInsertDto orderInsertDto, Long userId) {
@@ -63,7 +67,10 @@ public class OrderService {
     public OrderDetailDto getOrderDetail(Long userId, Long ordercode) {
         Orders order = ordersRepository.findByUserIdAndCode(userId, ordercode).orElse(null);
         List<Long> itemCodes = orderItemRepository.findAllItemCodeByOrderCode(order.getCode());
-        List<ItemResponse> itemList = itemServiceClient.getItemList(itemCodes);
+
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreakder");
+        List<ItemResponse> itemList = circuitbreaker.run(() -> itemServiceClient.getItemList(itemCodes),
+                throwable -> new ArrayList<>());
 
         OrderDetailDto orderDetailDto = new OrderDetailDto(order, itemList);
 
