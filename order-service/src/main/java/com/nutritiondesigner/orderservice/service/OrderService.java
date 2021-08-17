@@ -12,6 +12,7 @@ import com.nutritiondesigner.orderservice.model.dto.order.OrderStatusDto;
 import com.nutritiondesigner.orderservice.repository.OrderItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService {
@@ -36,6 +38,7 @@ public class OrderService {
 
     @Transactional
     public void insertOrder(OrderInsertDto orderInsertDto, Long userId) {
+        log.info("Before add orders data");
         Orders orders = new Orders(userId, orderInsertDto.getPrice());
         ordersRepository.save(orders);
 
@@ -50,6 +53,7 @@ public class OrderService {
             orderItems.add(new OrderItem(orders, order.getItemCode(), order.getQuantity()));
         }
         orderItemRepository.saveAll(orderItems);
+        log.info("After added orders data");
         /**
          * TODO: 장바구니 비우기
          */
