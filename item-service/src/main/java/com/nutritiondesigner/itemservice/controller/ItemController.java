@@ -4,6 +4,7 @@ import com.nutritiondesigner.itemservice.model.dto.item.ItemRequest;
 import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
 import com.nutritiondesigner.itemservice.service.ItemService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,7 @@ public class ItemController {
     }
 
     @GetMapping
+    @Timed(value = "items.getList", longTask = true)
     public ResponseEntity<List<ItemResponse>> getItemList(@RequestParam("itemCodes") List<Long> itemCodes){
         List<ItemResponse> itemList = itemService.getByCodeList(itemCodes);
 
@@ -94,6 +96,7 @@ public class ItemController {
      * feign-client : order-service
      */
     @PostMapping("/insert-order")
+    @Timed(value = "items.insertOrder", longTask = true)
     ResponseEntity insertOrder(@RequestBody List<ItemRequest> itemRequestList){
         itemService.insertOrder(itemRequestList);
 

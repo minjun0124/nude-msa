@@ -6,6 +6,7 @@ import com.nutrtiondesigner.cartservice.model.dto.DeleteCartDto;
 import com.nutrtiondesigner.cartservice.model.dto.ItemRequest;
 import com.nutrtiondesigner.cartservice.model.dto.UpdateCartDto;
 import com.nutrtiondesigner.cartservice.service.CartService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class CartController {
     }
 
     @PostMapping("/{userId}")
+    @Timed(value = "cart.insert", longTask = true)
     public ResponseEntity insertCart(@RequestBody ItemRequest itemRequest, @PathVariable("userId") Long userId){
         cartService.insertCart(itemRequest, userId);
 
@@ -36,6 +38,7 @@ public class CartController {
     }
 
     @GetMapping("/{userId}")
+    @Timed(value = "cart.list", longTask = true)
     public ResponseEntity cartsList(@PathVariable("userId") Long userId){
         CartListDto cartList = cartService.getUserCart(userId);
 

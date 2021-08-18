@@ -4,6 +4,7 @@ import com.nutritiondesigner.userservice.jwt.JwtFilter;
 import com.nutritiondesigner.userservice.jwt.TokenProvider;
 import com.nutritiondesigner.userservice.model.dto.TokenDto;
 import com.nutritiondesigner.userservice.model.form.SignInForm;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,7 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping
+    @Timed(value = "auth.authorize", longTask = true)
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody SignInForm signInForm) {
 
         // username, password 를 가지고 Authentication Token 생성
