@@ -70,6 +70,14 @@ spring:
           filters:
             - RewritePath=/item-service/(?<segment>.*), /$\{segment}
 
+        - id: item-service
+          uri: lb://item-service
+          predicates:
+            - Path=/item-service/actuator/**
+            - Method=POST,GET,PUT
+          filters:
+            - RewritePath=/item-service/(?<segment>.*), /$\{segment}
+
 #   cart-service POST, GET, PUT, DELETE
         - id: cart-service
           uri: lb://cart-service
@@ -79,11 +87,27 @@ spring:
           filters:
             - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
 
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart-service/actuator/**
+            - Method=POST,GET,PUT,DELETE
+          filters:
+            - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+
 #   order-service POST, GET, PUT, DELETE
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/order-service/**
+            - Method=POST,GET,PUT,DELETE
+          filters:
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/actuator/**
             - Method=POST,GET,PUT,DELETE
           filters:
             - RewritePath=/order-service/(?<segment>.*), /$\{segment}
@@ -114,4 +138,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans, httptrace, busrefresh, info, matrics, prometheus
+        include: refresh, health, beans, httptrace, busrefresh, info, metrics, prometheus
