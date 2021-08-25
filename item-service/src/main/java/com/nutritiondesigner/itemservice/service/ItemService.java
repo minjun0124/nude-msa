@@ -44,7 +44,6 @@ public class ItemService {
         Category category = categoryRepository.findByName(upLoadForm.getCategory());
         CategoryItem categoryItem = new CategoryItem(category, item);
         categoryItemRepository.save(categoryItem);
-
     }
 
     @Transactional

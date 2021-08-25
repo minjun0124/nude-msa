@@ -1,5 +1,6 @@
 package com.nutritiondesigner.itemservice.controller;
 
+import com.nutritiondesigner.itemservice.messagequeue.KafkaProducer;
 import com.nutritiondesigner.itemservice.model.dto.item.ItemRequest;
 import com.nutritiondesigner.itemservice.model.dto.item.ItemResponse;
 import com.nutritiondesigner.itemservice.model.form.ItemUpLoadForm;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final KafkaProducer kafkaProducer;
 
     @Value("${spring.servlet.multipart.location}")
     String filePath;
@@ -35,6 +37,9 @@ public class ItemController {
 //    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity upload(ItemUpLoadForm upLoadForm) throws Exception {
         itemService.upload(upLoadForm);
+
+        ItemRequest itemRequest = new ItemRequest(upLoadForm);
+        kafkaProducer.send("order-topic", itemRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

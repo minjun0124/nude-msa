@@ -1,6 +1,8 @@
 package com.nutritiondesigner.orderservice.service;
 
 import com.nutritiondesigner.orderservice.client.ItemServiceClient;
+import com.nutritiondesigner.orderservice.exception.StockShortageException;
+import com.nutritiondesigner.orderservice.model.domain.Item;
 import com.nutritiondesigner.orderservice.model.domain.OrderItem;
 import com.nutritiondesigner.orderservice.model.domain.Orders;
 import com.nutritiondesigner.orderservice.model.dto.item.ItemResponse;
@@ -9,6 +11,7 @@ import com.nutritiondesigner.orderservice.model.dto.order.OrderDetailDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderInsertDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderListDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderStatusDto;
+import com.nutritiondesigner.orderservice.repository.ItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrderItemRepository;
 import com.nutritiondesigner.orderservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,8 @@ public class OrderService {
 
     private final OrdersRepository ordersRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ItemRepository itemRepository;
+
     private final ItemServiceClient itemServiceClient;
 
     private final CircuitBreakerFactory circuitBreakerFactory;
@@ -45,11 +50,19 @@ public class OrderService {
          * TODO: 아래와 같이 코드를 짜면 쿼리가 여러번 수행됨.
          * 어떻게 개선할 수 있을까? 조회쿼리 때문에 벌크성 쿼리도 수행할 수 없다.
          */
-        List<ItemRequest> codeList = orderInsertDto.getCodeList();
+        List<ItemRequest> itemRequestList = orderInsertDto.getCodeList();
 
-//        itemServiceClient.insertOrder(codeList);
+        for (ItemRequest request : itemRequestList) {
+            Item item = itemRepository.findById(request.getItemCode()).orElse(null);
+            if (item.getStock() < request.getQuantity()) {
+                throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
+            }
+
+            item.decreaseStock(request.getQuantity());
+        }
+
         List<OrderItem> orderItems = new ArrayList<>();
-        for (ItemRequest order : codeList) {
+        for (ItemRequest order : itemRequestList) {
             orderItems.add(new OrderItem(orders, order.getItemCode(), order.getQuantity()));
         }
         orderItemRepository.saveAll(orderItems);
