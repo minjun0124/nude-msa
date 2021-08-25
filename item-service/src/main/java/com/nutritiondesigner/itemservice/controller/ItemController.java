@@ -95,12 +95,12 @@ public class ItemController {
     /**
      * feign-client : order-service
      */
-    @PostMapping("/insert-order")
-    @Timed(value = "items.insertOrder", longTask = true)
-    ResponseEntity insertOrder(@RequestBody List<ItemRequest> itemRequestList){
-        itemService.insertOrder(itemRequestList);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("/insert-order")
+//    @Timed(value = "items.insertOrder", longTask = true)
+//    ResponseEntity insertOrder(@RequestBody List<ItemRequest> itemRequestList){
+//        itemService.insertOrder(itemRequestList);
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 }

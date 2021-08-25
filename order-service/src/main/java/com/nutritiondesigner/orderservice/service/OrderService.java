@@ -32,7 +32,6 @@ public class OrderService {
     private final OrdersRepository ordersRepository;
     private final OrderItemRepository orderItemRepository;
     private final ItemServiceClient itemServiceClient;
-//    private final ItemRepository itemRepository;
 
     private final CircuitBreakerFactory circuitBreakerFactory;
 
@@ -47,7 +46,8 @@ public class OrderService {
          * 어떻게 개선할 수 있을까? 조회쿼리 때문에 벌크성 쿼리도 수행할 수 없다.
          */
         List<ItemRequest> codeList = orderInsertDto.getCodeList();
-        itemServiceClient.insertOrder(codeList);
+
+//        itemServiceClient.insertOrder(codeList);
         List<OrderItem> orderItems = new ArrayList<>();
         for (ItemRequest order : codeList) {
             orderItems.add(new OrderItem(orders, order.getItemCode(), order.getQuantity()));

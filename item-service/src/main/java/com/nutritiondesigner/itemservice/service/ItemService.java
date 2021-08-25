@@ -101,15 +101,15 @@ public class ItemService {
         return itemResponses;
     }
 
-    @Transactional
-    public void insertOrder(List<ItemRequest> itemRequestList) {
-        for (ItemRequest request : itemRequestList) {
-            Item item = itemRepository.findById(request.getItemCode()).orElse(null);
-            if (item.getStock() < request.getQuantity()) {
-                throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
-            }
-
-            item.decreaseStock(request.getQuantity());
-        }
-    }
+//    @Transactional
+//    public void insertOrder(List<ItemRequest> itemRequestList) {
+//        for (ItemRequest request : itemRequestList) {
+//            Item item = itemRepository.findById(request.getItemCode()).orElse(null);
+//            if (item.getStock() < request.getQuantity()) {
+//                throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
+//            }
+//
+//            item.decreaseStock(request.getQuantity());
+//        }
+//    }
 }

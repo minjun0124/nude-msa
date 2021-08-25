@@ -1,5 +1,6 @@
 package com.nutritiondesigner.orderservice.controller;
 
+import com.nutritiondesigner.orderservice.messagequeue.KafkaProducer;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderDetailDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderInsertDto;
 import com.nutritiondesigner.orderservice.model.dto.order.OrderListDto;
@@ -19,11 +20,15 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final KafkaProducer kafkaProducer;
 
     @PostMapping("/{userId}")
     @Timed(value = "orders.insert", longTask = true)
     public ResponseEntity insertOrder(@RequestBody OrderInsertDto orderInsertDto, @PathVariable("userId") Long userId) {
         orderService.insertOrder(orderInsertDto, userId);
+
+        /* send this order to the kafka  */
+        kafkaProducer.send("item-topic", orderInsertDto.getCodeList());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
