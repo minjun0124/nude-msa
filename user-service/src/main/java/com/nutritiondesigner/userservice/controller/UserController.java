@@ -3,6 +3,7 @@ package com.nutritiondesigner.userservice.controller;
 import com.nutritiondesigner.userservice.exception.UserNotFoundException;
 import com.nutritiondesigner.userservice.model.domain.Greeting;
 import com.nutritiondesigner.userservice.model.domain.User;
+import com.nutritiondesigner.userservice.model.dto.UserDto;
 import com.nutritiondesigner.userservice.model.form.PwCheckForm;
 import com.nutritiondesigner.userservice.model.form.SignUpForm;
 import com.nutritiondesigner.userservice.service.UserService;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,52 +48,44 @@ public class UserController {
     // PreAuthorize 활용
     // USER Role 과 ADMIN Role 모두 접근할 수 있다.
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<User> getMyUserInfo() {
-        Optional<User> userOp = userService.getMyUserWithAuthorities();
-        if (userOp.isEmpty()) {
-            throw new UserNotFoundException(String.format("User not found"));
-        }
+    public ResponseEntity<UserDto> getMyUserInfo(@RequestHeader("Authorization") String jwt) {
+        UserDto userDto = userService.getUserWithJwt(jwt);
 
-        return ResponseEntity.ok(userOp.get());
+        return ResponseEntity.ok(userDto);
     }
 
     // PreAuthorize 활용
     // ADMIN Role 만이 접근할 수 있다.
-    @GetMapping("/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<User> getUserInfo(@PathVariable String username) {
-        Optional<User> userOp = userService.getUserWithAuthorities(username);
-        if (userOp.isEmpty()) {
-            throw new UserNotFoundException(String.format("User not found"));
-        }
+//    @GetMapping("/{username}")
+//    public ResponseEntity<User> getUserInfo(@PathVariable String username) {
+//        Optional<User> userOp = userService.getUserWithAuthorities(username);
+//        if (userOp.isEmpty()) {
+//            throw new UserNotFoundException(String.format("User not found"));
+//        }
+//
+//        return ResponseEntity.ok(userOp.get());
+//    }
 
-        return ResponseEntity.ok(userOp.get());
-    }
+//    @PostMapping("/pwcheck")
+//    public ResponseEntity passwordCheck(@RequestHeader("userId") String userId, @Valid @RequestBody PwCheckForm pwCheckForm) {
+//        if (userService.passwordCheck(userId, pwCheckForm)) {
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }
+//
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//    }
 
-    @PostMapping("/pwcheck")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity passwordCheck(@Valid @RequestBody PwCheckForm pwCheckForm) {
-        if (userService.passwordCheck(pwCheckForm)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
+//    @PutMapping
+//    public ResponseEntity modUser(@RequestHeader("userId") String userId, @Valid @RequestBody SignUpForm signUpForm) {
+//        userService.modInfo(signUpForm);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @PutMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity modUser(@Valid @RequestBody SignUpForm signUpForm) {
-        userService.modInfo(signUpForm);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity withdrawUser() {
-        userService.withdraw();
-        //TODO: 탈퇴 후 logout
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @DeleteMapping
+//    public ResponseEntity withdrawUser(@RequestHeader("userId") String userId) {
+//        userService.withdraw(userId);
+//        //TODO: 탈퇴 후 logout
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

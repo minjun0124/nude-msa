@@ -20,6 +20,17 @@ spring:
     gateway:
       routes:
 
+#   auth-service : POST
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth-service/auth
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/auth-service/(?<segment>.*), /$\{segment}
+
+
 #   user-service /auth POST
         - id: user-service
           uri: lb://user-service

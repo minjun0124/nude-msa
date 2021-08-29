@@ -1,6 +1,6 @@
-package com.nutritiondesigner.userservice.repository;
+package com.nutritiondesigner.authservice.repository;
 
-import com.nutritiondesigner.userservice.model.domain.User;
+import com.nutritiondesigner.authservice.model.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,7 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByUsername(String username);
-
-    Optional<User> findByUsername(String subject);
-
 }

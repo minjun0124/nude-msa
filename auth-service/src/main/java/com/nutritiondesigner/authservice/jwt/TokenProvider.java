@@ -1,4 +1,4 @@
-package com.nutritiondesigner.userservice.jwt;
+package com.nutritiondesigner.authservice.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -6,8 +6,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 
 
 /**
- * No.1
  * 토큰의 생성, 토큰의 유효성 검증등을 담당
  * <p>
  * InitializingBean:afterPropertiesSet() - 빈이 생성되고 생성자 주입 이후 secret 값을 Base64 Decode해서 key변수 할당
@@ -32,8 +29,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
-
-    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -73,49 +68,5 @@ public class TokenProvider {
         tokenValidityInMilliseconds = Long.parseLong(env.getProperty("jwt.token-validity-in-seconds")) * 1000;
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    /**
-     * Token 정보를 이용해 Authentication 객체를 리턴
-     */
-    public Authentication getAuthentication(String token) {
-        // 토큰으로 클레임 생성
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        // 클레임에서 권한 정보들을 추출출
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-        // 권한 정보를 이용해서 User 객체 생성
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        // 유저 객체와 토큰, 권한정보를 이용해서 Authentication 객체를 리턴
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-    }
-
-    /**
-     * 토큰을 파싱해보고 발생하는 Exception 을 Catch, 문제 시 false, 정상이면 true
-     */
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            logger.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            logger.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
     }
 }

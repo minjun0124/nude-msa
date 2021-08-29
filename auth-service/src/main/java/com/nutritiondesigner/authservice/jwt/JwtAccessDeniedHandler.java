@@ -1,4 +1,4 @@
-package com.nutritiondesigner.userservice.jwt;
+package com.nutritiondesigner.authservice.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * No.5
  * 필요한 권한이 존재하지 않는 경우
  */
 @Component

@@ -1,9 +1,8 @@
-package com.nutritiondesigner.userservice.config;
+package com.nutritiondesigner.authservice.config;
 
-import com.nutritiondesigner.userservice.jwt.JwtAccessDeniedHandler;
-import com.nutritiondesigner.userservice.jwt.JwtAuthenticationEntryPoint;
-import com.nutritiondesigner.userservice.jwt.JwtSecurityConfig;
-import com.nutritiondesigner.userservice.jwt.TokenProvider;
+import com.nutritiondesigner.authservice.jwt.JwtAccessDeniedHandler;
+import com.nutritiondesigner.authservice.jwt.JwtAuthenticationEntryPoint;
+import com.nutritiondesigner.authservice.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 // 기본적인 Web 보안을 활성화
 // 추가적으로 WebSecurityConfigurer 를 implements 하거나
-// WebSucurityAdapter 를 extends 하는 방법이 있다.
+// WebSecurityAdapter 를 extends 하는 방법이 있다.
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) //@PreAuthorize 어노테이션을 메소드단위로 추가하기 위해서 적용
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -92,11 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/users/welcome").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/health-check").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated()
-
-                // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
-                .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .anyRequest().authenticated();
     }
 }
 

@@ -1,20 +1,20 @@
 package com.nutritiondesigner.userservice.service;
 
 import com.nutritiondesigner.userservice.client.CartServiceClient;
+import com.nutritiondesigner.userservice.exception.UserNotFoundException;
 import com.nutritiondesigner.userservice.model.domain.Authority;
 import com.nutritiondesigner.userservice.model.domain.User;
-import com.nutritiondesigner.userservice.model.form.PwCheckForm;
+import com.nutritiondesigner.userservice.model.dto.UserDto;
 import com.nutritiondesigner.userservice.model.form.SignUpForm;
 import com.nutritiondesigner.userservice.repository.UserRepository;
-import com.nutritiondesigner.userservice.util.SecurityUtil;
-import feign.FeignException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -26,8 +26,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final Environment env;
-//    private final RestTemplate restTemplate;
+    private final ModelMapper modelMapper;
+    private final Environment env;
 
     private final CartServiceClient cartServiceClient;
 
@@ -90,34 +90,67 @@ public class UserService {
     }
 
     // username 을 받아와서 해당하는 유저 객체와 권한 정보를 가져올 수 있다.
-    public Optional<User> getUserWithAuthorities(String username) {
-        return userRepository.findOneWithAuthoritiesByUsername(username);
-    }
+//    public Optional<User> getUserWithAuthorities(String userId) {
+//        return userRepository.findOneWithAuthoritiesById(userId);
+//    }
 
     // 현재 SecurityContext 에 저장이 되어 있는 username 에 대한 유저객체와 권한정보를 가져올 수 있다.
-    public Optional<User> getMyUserWithAuthorities() {
-        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
-    }
+//    public Optional<User> getMyUserWithAuthorities() {
+//        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
+//    }
 
-    public Boolean passwordCheck(PwCheckForm passwordForm) {
-        User user = getMyUserWithAuthorities().get();
-        if (passwordEncoder.matches(passwordForm.getPassword(), user.getPassword())) {
-            return true;
+//    public Boolean passwordCheck(String userId, PwCheckForm passwordForm) {
+//        Optional<User> userOp = userRepository.findOneWithAuthoritiesById(userId);
+//        if (userOp.isEmpty()) {
+//            return false;
+//        }
+//        User user = userOp.get();
+//        if (passwordEncoder.matches(passwordForm.getPassword(), user.getPassword())) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+//    @Transactional
+//    public void modInfo(String userId, SignUpForm signUpForm) {
+//        User user = userRepository.findOneWithAuthoritiesById(userId).get();
+//        String changePw = passwordEncoder.encode(signUpForm.getPassword());
+//        user.updateInfo(signUpForm, changePw);
+//    }
+//
+//    @Transactional
+//    public void withdraw(String userId) {
+//        User user = userRepository.findOneWithAuthoritiesById(userId).get();
+//        user.withdraw();
+//    }
+
+    public UserDto getUserWithJwt(String jwt) {
+        String subject = null;
+        jwt = jwt.replace("Bearer", "");
+        String property = env.getProperty("jwt.secret");
+
+        try {
+            subject = Jwts.parserBuilder().setSigningKey(property)
+                    .build().parseClaimsJws(jwt).getBody().getSubject();
+        } catch (Exception exception) {
+            throw new UserNotFoundException("요청하신 유저 정보를 찾지 못했습니다.");
         }
 
-        return false;
-    }
+        if (subject == null || subject.isEmpty()) {
+            throw new UserNotFoundException("요청하신 유저 정보를 찾지 못했습니다.");
+        }
 
-    @Transactional
-    public void modInfo(SignUpForm signUpForm) {
-        User user = getMyUserWithAuthorities().get();
-        String changePw = passwordEncoder.encode(signUpForm.getPassword());
-        user.updateInfo(signUpForm, changePw);
-    }
+        Optional<User> userOp = userRepository.findByUsername(subject);
 
-    @Transactional
-    public void withdraw() {
-        User user = getMyUserWithAuthorities().get();
-        user.withdraw();
+        if (userOp.isEmpty()) {
+            throw new UserNotFoundException("요청하신 유저 정보를 찾지 못했습니다.");
+        }
+
+
+
+        UserDto userDto = modelMapper.map(userOp.get(), UserDto.class);
+
+        return userDto;
     }
 }

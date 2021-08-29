@@ -1,25 +1,19 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.9'
+	id 'org.springframework.boot' version '2.4.10'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
 
 group = 'com.nutrition-designer'
-version = '1.0'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
 
 repositories {
 	mavenCentral()
 }
 
 ext {
-	set('springCloudVersion', "2020.0.2")
+	set('springCloudVersion', "2020.0.3")
 }
 
 dependencies {
@@ -33,20 +27,19 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
 	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-
-	implementation 'org.modelmapper:modelmapper:2.1.1'
 
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+	implementation 'org.projectlombok:lombok:1.18.18'
 
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'

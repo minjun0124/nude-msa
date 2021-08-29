@@ -1,9 +1,8 @@
-package com.nutritiondesigner.userservice.controller;
+package com.nutritiondesigner.authservice.controller;
 
-import com.nutritiondesigner.userservice.jwt.JwtFilter;
-import com.nutritiondesigner.userservice.jwt.TokenProvider;
-import com.nutritiondesigner.userservice.model.dto.TokenDto;
-import com.nutritiondesigner.userservice.model.form.SignInForm;
+import com.nutritiondesigner.authservice.jwt.TokenProvider;
+import com.nutritiondesigner.authservice.model.dto.TokenDto;
+import com.nutritiondesigner.authservice.model.form.SignInForm;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,15 +41,13 @@ public class AuthController {
         // CustomUserDetailsService:loadUserByUsername 메소드가 실행, User 객체 생성
         // User 객체로 Authentication 객체 생성
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        // Authentication 객체를 SecurityContext 에 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 위에서 생성된 인증정보인 authentication 을 기준으로 JWT Token 생성
         String jwt = tokenProvider.createToken(authentication);
 
         // JWT 토큰을 Response header 에 넣어줌
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add("Authorization", "Bearer " + jwt);
 
         // TokenDto를 이용해서 ResponseBody 에도 넣어서 return
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);

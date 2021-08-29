@@ -1,7 +1,7 @@
-package com.nutritiondesigner.userservice.service;
+package com.nutritiondesigner.authservice.service;
 
-import com.nutritiondesigner.userservice.model.domain.User;
-import com.nutritiondesigner.userservice.repository.UserRepository;
+import com.nutritiondesigner.authservice.model.domain.User;
+import com.nutritiondesigner.authservice.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.nutritiondesigner.userservice.model.form;
+package com.nutritiondesigner.authservice.model.form;
 
 import lombok.Data;
 

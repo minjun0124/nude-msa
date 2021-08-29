@@ -1,4 +1,4 @@
-package com.nutritiondesigner.userservice.jwt;
+package com.nutritiondesigner.authservice.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * No.4
  * 유효한 자격증명을 제공하지 않고 접근하려 할 때
  */
 @Component
