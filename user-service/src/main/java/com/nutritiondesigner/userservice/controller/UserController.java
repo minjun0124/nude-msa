@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ public class UserController {
     // PreAuthorize 활용
     // USER Role 과 ADMIN Role 모두 접근할 수 있다.
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<UserDto> getMyUserInfo(@RequestHeader("Authorization") String jwt) {
         UserDto userDto = userService.getUserWithJwt(jwt);
 
