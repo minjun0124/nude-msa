@@ -10,6 +10,7 @@ import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class OrderController {
 
     @PostMapping("/{userId}")
     @Timed(value = "orders.insert", longTask = true)
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity insertOrder(@RequestBody OrderInsertDto orderInsertDto, @PathVariable("userId") Long userId) {
         orderService.insertOrder(orderInsertDto, userId);
 
@@ -34,6 +36,7 @@ public class OrderController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity updateOrderStatus(@RequestBody OrderStatusDto orderStatusDto) {
         orderService.updateOrderStatus(orderStatusDto);
 
@@ -42,6 +45,7 @@ public class OrderController {
 
     @GetMapping("/{userId}")
     @Timed(value = "orders.list", longTask = true)
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity orderList(@PathVariable("userId") Long userId) {
         List<OrderListDto> orderList = orderService.getOrderList(userId);
 
@@ -50,6 +54,7 @@ public class OrderController {
 
     @GetMapping("/{userId}/{ordercode}")
     @Timed(value = "orders.detail", longTask = true)
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity orderDetail(@PathVariable("userId") Long userId, @PathVariable Long ordercode) {
         OrderDetailDto orderDetail = orderService.getOrderDetail(userId, ordercode);
 
