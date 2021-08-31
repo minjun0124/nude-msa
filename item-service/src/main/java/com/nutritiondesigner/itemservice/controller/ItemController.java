@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ItemController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity upload(ItemUpLoadForm upLoadForm) throws Exception {
         itemService.upload(upLoadForm);
 
@@ -45,7 +46,7 @@ public class ItemController {
     }
 
     @PutMapping
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity modItem(ItemUpLoadForm upLoadForm) throws Exception {
         itemService.modItem(upLoadForm);
 
