@@ -47,7 +47,7 @@ public class AuthController {
         String refreshToken = tokenProvider.createRefreshToken();
 
         // TokenDto를 이용해서 ResponseBody 에도 넣어서 return
-        TokenDto tokenDto = new TokenDto("Bearer " + accessToken, "Bearer " + refreshToken);
+        TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
 
         return new ResponseEntity<>(tokenDto, HttpStatus.OK);
     }
