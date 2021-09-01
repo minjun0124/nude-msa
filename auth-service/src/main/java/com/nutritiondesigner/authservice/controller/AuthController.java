@@ -44,7 +44,7 @@ public class AuthController {
 
         // 위에서 생성된 인증정보인 authentication 을 기준으로 JWT Token 생성
         String accessToken = tokenProvider.createAccessToken(authentication);
-        String refreshToken = tokenProvider.createRefreshToken();
+        String refreshToken = tokenProvider.createRefreshToken(signInForm.getUsername());
 
         // TokenDto를 이용해서 ResponseBody 에도 넣어서 return
         TokenDto tokenDto = new TokenDto(accessToken, refreshToken);

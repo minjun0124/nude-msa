@@ -68,7 +68,7 @@ public class TokenProvider {
     /**
      * Expire date 를 사용해서 Refresh 토큰을 생성하는 createRefreshToken 메소드 추가
      */
-    public String createRefreshToken() {
+    public String createRefreshToken(String username) {
 
         keyPropertiesSet("refresh");
 
@@ -82,7 +82,7 @@ public class TokenProvider {
                 .setExpiration(validity)
                 .compact();
 
-        redisService.setData(rToken, "");
+        redisService.setData(username, rToken);
 
         return rToken;
     }
