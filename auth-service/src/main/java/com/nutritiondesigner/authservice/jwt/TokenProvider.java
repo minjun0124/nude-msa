@@ -45,7 +45,7 @@ public class TokenProvider {
      */
     public String createAccessToken(Authentication authentication) {
 
-        keyPropertiesSet();
+        keyPropertiesSet("access");
 
         // Authentication 권한들
         String authorities = authentication.getAuthorities().stream()
@@ -70,7 +70,7 @@ public class TokenProvider {
      */
     public String createRefreshToken() {
 
-        keyPropertiesSet();
+        keyPropertiesSet("refresh");
 
         // this.tokenValidityInMilliseconds - application.yml 에 설정했던 만료시간
         long now = (new Date()).getTime();
@@ -87,9 +87,10 @@ public class TokenProvider {
         return rToken;
     }
 
-    public void keyPropertiesSet() {
+    public void keyPropertiesSet(String task) {
         secret = env.getProperty("jwt.secret");
-        tokenValidityInMilliseconds = Long.parseLong(env.getProperty("jwt.token-validity-in-seconds")) * 1000;
+        String validity = env.getProperty("jwt." + task + "-token-validity-in-seconds");
+        tokenValidityInMilliseconds = Long.parseLong(validity) * 1000;
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
     }
