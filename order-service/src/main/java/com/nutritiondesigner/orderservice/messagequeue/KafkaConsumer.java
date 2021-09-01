@@ -30,7 +30,7 @@ public class KafkaConsumer {
         try {
             map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {
             });
-            Item item = new Item((Long) map.get("itemCode")
+            Item item = new Item(((Number) map.get("itemCode")).longValue()
                     , (Integer) map.get("price")
                     , (Integer) map.get("quantity"));
             itemRepository.save(item);

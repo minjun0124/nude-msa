@@ -37,7 +37,8 @@ public class ItemController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity upload(ItemUpLoadForm upLoadForm) throws Exception {
-        itemService.upload(upLoadForm);
+        Long itemCode = itemService.upload(upLoadForm);
+        upLoadForm.setItemCode(itemCode);
 
         ItemRequest itemRequest = new ItemRequest(upLoadForm);
         kafkaProducer.send("order-topic", itemRequest);
@@ -55,7 +56,7 @@ public class ItemController {
 
     @GetMapping
     @Timed(value = "items.getList", longTask = true)
-    public ResponseEntity<List<ItemResponse>> getItemList(@RequestParam("itemCodes") List<Long> itemCodes){
+    public ResponseEntity<List<ItemResponse>> getItemList(@RequestParam("itemCodes") List<Long> itemCodes) {
         List<ItemResponse> itemList = itemService.getByCodeList(itemCodes);
 
         return new ResponseEntity<>(itemList, HttpStatus.OK);

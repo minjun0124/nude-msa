@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     @Query("select oi.itemCode from OrderItem oi where oi.orders.code = :code")
-    List<Long> findAllItemCodeByOrderCode(Long code);
+    List<Long> findAllItemCodeByOrderCode(@Param("code") Long code);
 }

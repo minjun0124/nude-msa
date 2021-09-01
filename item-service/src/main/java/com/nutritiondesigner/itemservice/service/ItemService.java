@@ -35,7 +35,7 @@ public class ItemService {
     private final CategoryItemRepository categoryItemRepository;
 
     @Transactional
-    public void upload(ItemUpLoadForm upLoadForm) throws IOException {
+    public Long upload(ItemUpLoadForm upLoadForm) throws IOException {
         String imgPath = FileUtil.uploadImage(upLoadForm.getImg());
         Item item = upLoadForm.toEntity(imgPath);
 
@@ -44,6 +44,8 @@ public class ItemService {
         Category category = categoryRepository.findByName(upLoadForm.getCategory());
         CategoryItem categoryItem = new CategoryItem(category, item);
         categoryItemRepository.save(categoryItem);
+
+        return item.getCode();
     }
 
     @Transactional

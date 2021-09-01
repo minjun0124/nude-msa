@@ -83,6 +83,8 @@ public class UserService {
 //            log.error(ex.getMessage());
 //        }
 
+        log.info(String.valueOf(user.getId()));
+
         /* ErrorDecoder */
         cartServiceClient.createCart(user.getId());
 
