@@ -94,4 +94,23 @@ public class TokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public void blackAccessToken(String accessToken) {
+        secret = env.getProperty("jwt.secret");
+        redisService.setData(accessToken, "");
+
+        Date expiration = Jwts.parserBuilder().setSigningKey(secret)
+                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+        Long now = (new Date()).getTime();
+        Long exp = expiration.getTime() - now;
+
+        redisService.setDataExpire(accessToken, "", exp);
+    }
+
+    public void deleteRefreshToken(String accessToken) {
+        String username = Jwts.parserBuilder().setSigningKey(secret)
+                .build().parseClaimsJws(accessToken).getBody().getSubject();
+
+        redisService.deleteData(username);
+    }
 }

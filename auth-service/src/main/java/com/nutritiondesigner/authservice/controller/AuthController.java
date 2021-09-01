@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -52,13 +49,14 @@ public class AuthController {
         return new ResponseEntity<>(tokenDto, HttpStatus.OK);
     }
 
-    /**
-     * TODO: JWT token Redis
-     */
-//    @PostMapping("/logout")
-//    public ResponseEntity logout() {
-//
-//    }
+    @DeleteMapping
+    public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
+        tokenProvider.blackAccessToken(accessToken);
+        tokenProvider.deleteRefreshToken(accessToken);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     /**
      * TODO: Find Id by email credential
      */
