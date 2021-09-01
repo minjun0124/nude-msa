@@ -1,5 +1,6 @@
 package com.nutritiondesigner.authservice.jwt;
 
+import com.nutritiondesigner.authservice.service.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TokenProvider {
 
+    private final RedisService redisService;
     private static final String AUTHORITIES_KEY = "auth";
 
     private String secret;
@@ -75,10 +77,14 @@ public class TokenProvider {
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         // jwt 토큰 생성
-        return Jwts.builder()
+        String rToken = Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+
+        redisService.setData(rToken, "");
+
+        return rToken;
     }
 
     public void keyPropertiesSet() {
