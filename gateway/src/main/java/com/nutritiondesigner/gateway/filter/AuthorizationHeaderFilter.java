@@ -1,5 +1,6 @@
 package com.nutritiondesigner.gateway.filter;
 
+import com.nutritiondesigner.gateway.service.RedisService;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
@@ -13,15 +14,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @Component
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
     private final Environment env;
+    private final RedisService redisService;
 
-    public AuthorizationHeaderFilter(Environment env) {
+    public AuthorizationHeaderFilter(Environment env, RedisService redisService) {
         super(Config.class);
         this.env = env;
+        this.redisService = redisService;
     }
 
     @Override
@@ -37,14 +42,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String authorizationHeader = request.getHeaders().get(org.springframework.http.HttpHeaders.AUTHORIZATION).get(0);
             String jwt = authorizationHeader.replace("Bearer", "");
 
-            log.info(jwt);
-
-            if (!isJwtValid(jwt)) {
+            if (!isJwtValid(jwt) && redisService.isBlack(jwt)) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             }
 
             return chain.filter(exchange);
-
         });
     }
 
