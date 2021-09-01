@@ -43,14 +43,13 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 위에서 생성된 인증정보인 authentication 을 기준으로 JWT Token 생성
-        String jwt = tokenProvider.createToken(authentication);
-
-        // JWT 토큰을 Response header 에 넣어줌
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + jwt);
+        String accessToken = tokenProvider.createAccessToken(authentication);
+        String refreshToken = tokenProvider.createRefreshToken();
 
         // TokenDto를 이용해서 ResponseBody 에도 넣어서 return
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        TokenDto tokenDto = new TokenDto("Bearer " + accessToken, "Bearer " + refreshToken);
+
+        return new ResponseEntity<>(tokenDto, HttpStatus.OK);
     }
 
     /**

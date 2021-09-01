@@ -39,9 +39,9 @@ public class TokenProvider {
     private final Environment env;
 
     /**
-     * Authentication 객체의 권한정보를 이용해서 토큰을 생성하는 createToken 메소드 추가
+     * Authentication 객체의 권한정보를 이용해서 Access 토큰을 생성하는 createAccessToken 메소드 추가
      */
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
 
         keyPropertiesSet();
 
@@ -58,6 +58,24 @@ public class TokenProvider {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    /**
+     * Expire date 를 사용해서 Refresh 토큰을 생성하는 createRefreshToken 메소드 추가
+     */
+    public String createRefreshToken() {
+
+        keyPropertiesSet();
+
+        // this.tokenValidityInMilliseconds - application.yml 에 설정했던 만료시간
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+        // jwt 토큰 생성
+        return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
