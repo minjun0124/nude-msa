@@ -3,12 +3,14 @@ package com.nutritiondesigner.authservice.controller;
 import com.nutritiondesigner.authservice.jwt.TokenProvider;
 import com.nutritiondesigner.authservice.model.dto.TokenDto;
 import com.nutritiondesigner.authservice.model.form.SignInForm;
+import io.jsonwebtoken.Claims;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -50,11 +52,32 @@ public class AuthController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
         tokenProvider.blackAccessToken(accessToken);
         tokenProvider.deleteRefreshToken(accessToken);
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity reIssueToken(@RequestBody TokenDto tokenDto) {
+        String accessToken = tokenDto.getAccessToken();
+        String refreshToken = tokenDto.getRefreshToken();
+
+        Claims claims = tokenProvider.getClaims(accessToken);
+        String username = claims.getSubject();
+
+        Boolean chkResult = tokenProvider.refreshTokenCheck(username, refreshToken);
+
+        if (chkResult) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        String reIssuedToken = tokenProvider.reIssueAccessToken(claims);
+
+        return new ResponseEntity<>(new TokenDto(reIssuedToken, refreshToken), HttpStatus.OK);
     }
 
     /**

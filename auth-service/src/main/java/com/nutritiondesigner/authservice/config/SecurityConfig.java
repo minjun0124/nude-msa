@@ -2,6 +2,7 @@ package com.nutritiondesigner.authservice.config;
 
 import com.nutritiondesigner.authservice.jwt.JwtAccessDeniedHandler;
 import com.nutritiondesigner.authservice.jwt.JwtAuthenticationEntryPoint;
+import com.nutritiondesigner.authservice.jwt.JwtSecurityConfig;
 import com.nutritiondesigner.authservice.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -88,7 +89,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+
+                // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider));
     }
 }
 
