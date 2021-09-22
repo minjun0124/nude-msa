@@ -19,12 +19,10 @@
 
 **<h2>discovery-service</h2>**
 
----
-
 <br>
 
 dependecies
-```
+``` gradle
 dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 }
@@ -67,14 +65,12 @@ public class DiscoveryServiceApplication {
 
 **<h2>user-service</h2>**
 
----
-
 eureka-client 예시
 
 <br>
 
 dependecies
-```
+``` gradle
 dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
