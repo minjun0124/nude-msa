@@ -25,24 +25,20 @@ public class KafkaConsumer {
     @KafkaListener(topics = "item-topic")
     public void updateQty(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
-
         HashMap<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            Collection<ItemRequest> itemRequestList = mapper.readValue(kafkaMessage, new TypeReference<Collection<ItemRequest>>() {
-            });
+            Collection<ItemRequest> itemRequestList = mapper.readValue(kafkaMessage,
+                    new TypeReference<Collection<ItemRequest>>() {});
             for (ItemRequest request : itemRequestList) {
                 Item item = itemRepository.findById(request.getItemCode()).orElse(null);
                 if (item.getStock() < request.getQuantity()) {
                     throw new StockShortageException(String.format("Item[%d] : 재고가 부족합니다.", item.getCode()));
                 }
-
                 item.decreaseStock(request.getQuantity());
             }
         } catch (JsonProcessingException ex) {
             ex.printStackTrace();
         }
-
     }
-
 }
