@@ -64,15 +64,12 @@ MSA의 특징과 장단점을 학습한다.</br>
 <img src="/readme_ref/NUDE-MSA-ARCH.PNG" title="MSA_ARCH" alt="MSA_ARCH"></img>
 
 <br>
-<br>
 
 ⚙주요 적용 내용 및 학습 내용
 ---
 
-<br>
-
 🖱 :: 상세보기
-- [Cloud Native Architecture]()
+- [Cloud Native Architecture](./readme_ref/CloudNative.md)
 - [Eureka Service Discovery]()
 - [API Gateway :: Routing, Load Balancer, Filter]()
 - [Spring-Security + JWT :: Sliding Session (AccessToken + RefreshToken)]()
@@ -84,6 +81,8 @@ MSA의 특징과 장단점을 학습한다.</br>
 - [Sleuth + Zipkin :: 분산 추적]()
 - [Prometheus + Grafana :: 모니터링]()
 - [Docker :: 컨테이너 가상화]()
+
+<br>
 
 # 💡Discussion
 
