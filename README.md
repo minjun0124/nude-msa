@@ -18,7 +18,7 @@
 <br>
 <br>
 
-💻프로젝트 기획 배경 및 목표
+**💻프로젝트 기획 배경 및 목표**
 ---
 
 **기존 [Nutrition-Designer](https://github.com/minjun0124/NUDE) RESTful 서비스의 MSA 전환**
@@ -26,7 +26,7 @@
 <br>
 <br>
 
-✏학습 목표
+**🎯학습 목표**
 ---
 각 서비스에 최적화된 언어와 DB를 선택하여 이기종으로 개발되며 MSA의 인기가 증가하고 있다.</br>
 기존 RESTful 기반으로 설계한 NUDE(Safe-Food Version.2) 프로젝트에 MSA 전환을 적용하고</br>
@@ -35,7 +35,7 @@ MSA의 특징과 장단점을 학습한다.</br>
 
 <br>
 
-🛠개발 환경
+**🛠개발 환경**
 ---
 - Java 11
 - SpringBoot 2.4.9
@@ -56,7 +56,7 @@ MSA의 특징과 장단점을 학습한다.</br>
 
 <br>
 
-📰Project Architecture
+**📰Project Architecture**
 ---
 
 <br>
@@ -65,22 +65,28 @@ MSA의 특징과 장단점을 학습한다.</br>
 
 <br>
 
-⚙주요 적용 내용 및 학습 내용
+**⚙프로젝트 구동 순서**
 ---
 
-🖱 :: 상세보기
+<br>
+<br><br>
+
+
+**✏주요 적용 내용 및 학습 내용**
+---
+
 - [Cloud Native Architecture](./readme_ref/CloudNative.md)
-- [Eureka Service Discovery]()
-- [API Gateway :: Routing, Load Balancer, Filter]()
-- [Spring-Security + JWT :: Sliding Session (AccessToken + RefreshToken)]()
-- [Redis :: Token Storage]()
-- [Spring-Cloud-Config + RabbitMQ + Actuator (busrefresh) :: Config 동기화]()
-- [Microservice 간의 통신 :: 동기(OpenFeign) / 비동기 (Kafka)]()
-- [Kafka :: Pub / Sub]()
-- [Resilience4J :: Fault Tolerance]()
-- [Sleuth + Zipkin :: 분산 추적]()
-- [Prometheus + Grafana :: 모니터링]()
-- [Docker :: 컨테이너 가상화]()
+- [Eureka Service Discovery](./readme_ref/Eureka.md)
+- [API Gateway :: Routing, Load Balancer, Filter](./readme_ref/SpringCloudGateway.md)
+- [Spring-Security + JWT + Redis(Token Storage) :: Sliding Session(AccessToken + RefreshToken)](./readme_ref/AuthServer.md)
+- [Spring-Cloud-Config + RabbitMQ + Actuator (busrefresh) :: Config 동기화](./readme_ref/SpringConfig.md)
+- [Microservice 간의 통신 :: 동기(OpenFeign) / 비동기 (Kafka)](./readme_ref/MicroserviceCommunication.md)
+- [Resilience4J :: Fault Tolerance](./readme_ref/Resilience4J.md)
+- [Sleuth + Zipkin :: 분산 추적](./readme_ref/DistributedTracing.md)
+- [Prometheus + Grafana :: 모니터링](./readme_ref/Monitoring.md)
+- [Docker :: 컨테이너 가상화](./readme_ref/Docker.md)
+
+🖱 :: 상세보기
 
 <br>
 
