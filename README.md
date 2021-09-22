@@ -19,7 +19,6 @@
 <br>
 
 💻프로젝트 기획 배경 및 목표
-
 ---
 
 **기존 [Nutrition-Designer](https://github.com/minjun0124/NUDE) RESTful 서비스의 MSA 전환**
@@ -58,21 +57,21 @@ MSA의 특징과 장단점을 학습한다.</br>
 <br>
 
 📰Project Architecture
-
 ---
 
 <br>
 
-<img src="/readme_ref/NUDE_MSA_ARCH.PNG" title="MSA_ARCH" alt="MSA_ARCH"></img>
+<img src="/readme_ref/NUDE-MSA-ARCH.PNG" title="MSA_ARCH" alt="MSA_ARCH"></img>
 
 <br>
 <br>
 
 ⚙주요 적용 내용 및 학습 내용
-
 ---
 
-⬇클릭하여 상세보기
+<br>
+
+🖱 :: 상세보기
 - [Cloud Native Architecture]()
 - [Eureka Service Discovery]()
 - [API Gateway :: Routing, Load Balancer, Filter]()
@@ -92,7 +91,6 @@ MSA의 특징과 장단점을 학습한다.</br>
 <br>
 
 [ 01. Domain 분리 & 데이터 동기화 ]
-
 ---
 
 
@@ -100,6 +98,5 @@ MSA의 특징과 장단점을 학습한다.</br>
 <br>
 
 [ 02. Auth-Server ]
-
 ---
 
