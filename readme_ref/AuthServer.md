@@ -16,7 +16,7 @@ Session 기반의 Security를 적용하는 경우 손쉽게 구현이 가능하�
 **관련 Repository**</br>
 [Auth-Service](https://github.com/minjun0124/nude-msa/tree/main/auth-service)</br>
 [API-Gateway](https://github.com/minjun0124/nude-msa/tree/main/gateway)</br>
-[User-Service (Micro-Service 예시)](https://github.com/minjun0124/nude-msa/tree/main/gateway)</br></br><br>
+[User-Service (Micro-Service 예시)](https://github.com/minjun0124/nude-msa/tree/main/user-service)</br></br><br>
 
 **Auth-Service**
 ---
