@@ -10,9 +10,9 @@
 - Nutrition-Designer (SafeFood Version.2)
 	- CSR, RESTful 적용
     - Link : https://github.com/minjun0124/NUDE 
-- Nutrition-Designer-MSA (SafeFood Version.3)
+- Nutrition-Designer-MSA (SafeFood Version.3) ---- (현재 위치)
 	- MSA 전환
-    - Link : https://github.com/minjun0124/nude-msa (현재 위치)
+    - Link : https://github.com/minjun0124/nude-msa
 
 
 <br>
@@ -28,10 +28,7 @@
 
 **🎯학습 목표**
 ---
-각 서비스에 최적화된 언어와 DB를 선택하여 이기종으로 개발되며 MSA의 인기가 증가하고 있다.</br>
-기존 RESTful 기반으로 설계한 NUDE(Safe-Food Version.2) 프로젝트에 MSA 전환을 적용하고</br>
-MSA의 특징과 장단점을 학습한다.</br>
-그 외 분산추적, 모니터링을 위해 필요한 부가 서비스를 추가하여 운용해본다.</br>
+각 서비스에 최적화된 언어와 DB를 선택하여 이기종으로 개발되며 MSA의 인기가 증가하고 있다. 기존 RESTful 기반으로 설계한</br>NUDE(Safe-Food Version.2) 프로젝트에 MSA 전환을 적용하고 MSA의 특징과 장단점을 학습한다. 그 외 분산추적, 모니터링을</br>위해 필요한 부가 서비스를 추가하여 운용해본다.
 
 <br>
 
@@ -86,8 +83,7 @@ MSA의 특징과 장단점을 학습한다.</br>
 - [Prometheus + Grafana :: 모니터링](./readme_ref/Monitoring.md)
 - [Docker :: 컨테이너 가상화](./readme_ref/Docker.md)
 
-🖱 :: 상세보기
-
+<br>
 <br>
 
 # 💡Discussion
