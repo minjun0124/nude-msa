@@ -27,9 +27,10 @@ public class OrderController {
     @Timed(value = "orders.insert", longTask = true)
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity insertOrder(@RequestBody OrderInsertDto orderInsertDto, @PathVariable("userId") Long userId) {
+        /* 주문 정보 생성 */
         orderService.insertOrder(orderInsertDto, userId);
 
-        /* send this order to the kafka  */
+        /* item-topic에 주문 상품 정보를 전달한다. */
         kafkaProducer.send("item-topic", orderInsertDto.getCodeList());
 
         return new ResponseEntity<>(HttpStatus.OK);

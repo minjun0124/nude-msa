@@ -17,10 +17,10 @@ public class Resilience4JConfig {
     public Customizer<Resilience4JCircuitBreakerFactory> globalCustomConfiguration() {
 
         CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
-                .failureRateThreshold(4)
-                .waitDurationInOpenState(Duration.ofMillis(1000))
-                .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
-                .slidingWindowSize(2)
+                .failureRateThreshold(4) // 실패 비율 Threshold 설정 해당 값 보다 클 경우 오픈
+                .waitDurationInOpenState(Duration.ofMillis(1000)) // 요청 처리가 해당 값보다 오래 걸릴 경우 오픈
+                .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED) // sliding window type 설정
+                .slidingWindowSize(2) // sliding window 크기 설정
                 .build();
 
         TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom()

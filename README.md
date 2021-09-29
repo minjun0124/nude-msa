@@ -78,14 +78,14 @@
 - [Spring-Security + JWT + Redis(Token Storage) :: Sliding Session(AccessToken + RefreshToken)](./readme_ref/AuthServer.md)
 - [Spring-Cloud-Config + RabbitMQ + Actuator (busrefresh) :: Config 동기화](./readme_ref/SpringConfig.md)
 - [Microservice 간의 통신 :: 동기(OpenFeign) / 비동기 (Kafka)](./readme_ref/MicroserviceCommunication.md)
-- [Resilience4J :: Fault Tolerance](./readme_ref/Resilience4J.md)
+<!-- - [Resilience4J :: Fault Tolerance](./readme_ref/Resilience4J.md)
 - [Sleuth + Zipkin :: 분산 추적](./readme_ref/DistributedTracing.md)
 - [Prometheus + Grafana :: 모니터링](./readme_ref/Monitoring.md)
-- [Docker :: 컨테이너 가상화](./readme_ref/Docker.md)
+- [Docker :: 컨테이너 가상화](./readme_ref/Docker.md) -->
 
 <br>
 <br>
-
+<!-- 
 # 💡Discussion
 
 <h3>프로젝트 수행 중 느낀 점, 기술적인 내용 정리</h3>
@@ -99,5 +99,5 @@
 <br>
 
 [ 02. Auth-Server ]
----
+--- -->
 
